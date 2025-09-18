@@ -1,0 +1,4 @@
+﻿# Visual Studio cache and build artifacts
+.vs/
+bin/
+obj/
