@@ -30,5 +30,47 @@ namespace DbOperationWithCoreApp.Controllers
             return Ok(currencyList);
         }
 
+
+
+        // To get single record
+
+
+        [HttpGet("{Id:int}")]
+        public async Task<IActionResult> GetCurrencyByIdAsync([FromRoute] int Id)
+        {
+
+
+
+            var currencyList = await appDbContext.Currencies.FindAsync(Id);
+           
+            return Ok(currencyList);
+        }
+
+        // To get single record by name
+        [HttpGet("{name}")]
+        public async Task<IActionResult> GetCurrencyByNameAsync([FromRoute] string name)
+        {
+
+
+
+           // var currencyList = await appDbContext.Currencies.Where(x=> x.Title == name).FirstOrDefaultAsync();
+            var currencyList = await appDbContext.Currencies.FirstOrDefaultAsync(x => x.Title == name);  // to get duplicate record without giving exception  (find first and return approch)
+
+            return Ok(currencyList);
+        }
+
+
+        // To get single record from two parameters
+        [HttpGet("{name}/{description}")]
+        public async Task<IActionResult> GetCurrencyByNameDESCAsync([FromRoute] string name, [FromRoute] string description)
+        {
+
+
+
+            var currencyList = await appDbContext.Currencies.FirstOrDefaultAsync(x => x.Title == name && x.Description == description);
+
+            return Ok(currencyList);
+        }
+
     }
 }
