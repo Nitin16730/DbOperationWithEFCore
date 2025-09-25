@@ -72,5 +72,34 @@ namespace DbOperationWithCoreApp.Controllers
             return Ok(currencyList);
         }
 
+
+
+        // To get records from multiple ids
+        [HttpGet("All")]
+        public async Task<IActionResult> GetCurrencyByMulIDsAsync()
+        {
+
+            var IDs =  new List<int> { 1, 2 };
+
+            var currencyList = await appDbContext.Currencies.Where(x => IDs.Contains(x.Id)).ToListAsync();
+
+            return Ok(currencyList);
+        }
+
+
+
+        // To get records from multiple ids by user
+        [HttpPost("All")]
+        public async Task<IActionResult> GetCurrencyByMulIDsByUserAsync([FromBody] List<int>IDs )
+        {
+
+           // var IDs = new List<int> { 1, 2 };
+
+            var currencyList = await appDbContext.Currencies.Where(x => IDs.Contains(x.Id)).ToListAsync();
+
+            return Ok(currencyList);
+        }
+
+
     }
 }
