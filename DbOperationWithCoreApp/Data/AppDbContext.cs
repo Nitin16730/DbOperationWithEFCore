@@ -32,5 +32,17 @@ namespace DbOperationWithCoreApp.Data
         public DbSet<Language> Language { get; set; }
         public DbSet<Currencies> Currencies { get; set; }
         public DbSet<BookPrice> BookPrice { get; set; }
+
+        public DbSet<Author> Authors { get; set; }
     }
 }
+
+
+
+
+
+
+// comand to create migration
+//     add-migration addauthortable
+//     comand to update database
+//     update-database

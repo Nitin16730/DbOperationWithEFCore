@@ -42,5 +42,53 @@ namespace DbOperationWithCoreApp.Controllers
             return Ok(model);
 
         }
+
+
+
+
+        // to update book details query hit 2 times first to et details and second to update
+
+        [HttpPut("{bookId}")]
+        public async Task<IActionResult> UpdateBook([FromRoute] int bookId ,[FromBody] Book model)
+        {
+            var book = appDbContext.Books.FirstOrDefault(x => x.Id == bookId);
+            if(book == null)
+            {
+                return NotFound("Book not found");
+            }
+            book.Title = model.Title;
+            book.Description = model.Description; 
+            book.NoOfPages = model.NoOfPages;
+            await appDbContext.SaveChangesAsync();
+
+            return Ok(model);
+
+        }
+
+
+
+
+
+        // to add book with author details
+
+        //      {
+
+        //"title": "Testing with Author 1",
+        //"description": "ABC",
+        //"noOfPages": 13,
+        //"isActive": true,
+        //"createdOn": "2025-09-26T07:28:43.483Z",
+        //"languageId": 2,
+
+        //"author": {
+
+        //  "name": "Nitin",
+        //  "email": "nitin@gmail.com"
+        //}
+        //}
+
+
+
+
     }
 }
