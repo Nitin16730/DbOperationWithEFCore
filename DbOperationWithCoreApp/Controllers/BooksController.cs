@@ -169,7 +169,22 @@ namespace DbOperationWithCoreApp.Controllers
 
         }
 
+        // Get Relational Data using navigational properties
 
+        [HttpGet("All")]
+        public async Task<IActionResult> GetBookswithAuthor()
+        {
+            var BookList = await appDbContext.Books.Select(x => new
+            {
+              Id =  x.Id,
+               Title = x.Title,
+               Author = x.Author != null ? x.Author.Name:"NA",
+               Language = x.Language 
+              
+                
+            }).ToListAsync();
+            return Ok(BookList);
+        }
 
          
 
