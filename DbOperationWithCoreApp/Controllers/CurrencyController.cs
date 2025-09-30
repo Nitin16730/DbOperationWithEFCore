@@ -25,9 +25,9 @@ namespace DbOperationWithCoreApp.Controllers
 
             //  var currencyList = await appDbContext.Currencies.ToListAsync();
             var currencyList = await (from Currencies in appDbContext.Currencies
-                                select Currencies).ToListAsync();
+                                select Currencies).AsNoTracking().ToListAsync();
 
-            return Ok(currencyList);
+            return Ok(currencyList); 
         }
 
 
