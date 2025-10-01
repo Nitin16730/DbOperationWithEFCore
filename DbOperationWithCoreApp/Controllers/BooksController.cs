@@ -1,6 +1,7 @@
 ﻿using DbOperationWithCoreApp.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace DbOperationWithCoreApp.Controllers
@@ -23,13 +24,24 @@ namespace DbOperationWithCoreApp.Controllers
 
         }
 
+
+
+
+
         [HttpGet]
         public async Task<IActionResult> GetBooks()
         {
             var BookList = await (from Books in appDbContext.Books
                                   select Books).ToListAsync();
 
+
+
+
             return Ok(BookList);
+
+
+
+
         }
 
         // insert bulk records
@@ -171,33 +183,33 @@ namespace DbOperationWithCoreApp.Controllers
 
         // Get Relational Data using navigational properties
 
-        [HttpGet("All")]
-        public async Task<IActionResult> GetBookswithAuthor()
-        {
-            var BookList = await appDbContext.Books.Select(x => new
-            {
-              Id =  x.Id,
-               Title = x.Title,
-               Author = x.Author != null ? x.Author.Name:"NA",
-               Language = x.Language 
+        //[HttpGet("All")]
+        //public async Task<IActionResult> GetBookswithAuthor()
+        //{
+        //    var BookList = await appDbContext.Books.Select(x => new
+        //    {
+        //      Id =  x.Id,
+        //       Title = x.Title,
+        //       Author = x.Author != null ? x.Author.Name:"NA",
+        //       Language = x.Language 
               
                 
-            }).ToListAsync();
-            return Ok(BookList);
-        }
+        //    }).ToListAsync();
+        //    return Ok(BookList);
+        //}
 
 
         // Eager Loading in EF core
 
-        [HttpGet("AllWithEagerLoading")]
-        public async Task<IActionResult> GetBookswithAuthorEagerLoading()
-        {
-            var BookList = await appDbContext.Books
-                .Include(x => x.Author)
-               // .Include(x => x.Language)
-                .ToListAsync();
-            return Ok(BookList);
-        }
+        //[HttpGet("AllWithEagerLoading")]
+        //public async Task<IActionResult> GetBookswithAuthorEagerLoading()
+        //{
+        //    var BookList = await appDbContext.Books
+        //        .Include(x => x.Author)
+        //       // .Include(x => x.Language)
+        //        .ToListAsync();
+        //    return Ok(BookList);
+        //}
          
 
 
@@ -273,6 +285,36 @@ namespace DbOperationWithCoreApp.Controllers
 
 
 
+        // Get data using SQL Qury
 
+
+        [HttpGet("GetBooksUsingSQLQuery")]
+        public async Task<IActionResult> GetBooksUsingSQLQuery()
+        {
+            //var bookList = await appDbContext.Books
+            //    .FromSqlRaw("SELECT * FROM Books")
+            //    .ToListAsync();
+
+            var columnvalue = 8;
+            var columnName = "Id";
+
+            var parameter = new SqlParameter("Columnvalue", columnvalue);
+
+            var bookList = await appDbContext.Books
+                .FromSqlRaw($"SELECT * FROM Books WHERE {columnName} = @columnvalue", parameter)
+                .ToListAsync();
+            return Ok(bookList);
+        }
+
+        // Execute Sql Query on database
+
+        [HttpPost("ExecuteSqlQuery")]
+
+        public async Task<IActionResult> ExecuteSqlQuery()
+        {
+             var result = await appDbContext.Database.SqlQuery<int>($" SELECT COUNT(*) FROM Books").ToListAsync();
+        // var  result = await appDbContext.Database.ExecuteSqlAsync($" UPDATE Books SET NoOfPages = 1200 WHERE Id = 8");
+            return Ok(result);
+        }
     }
 }
