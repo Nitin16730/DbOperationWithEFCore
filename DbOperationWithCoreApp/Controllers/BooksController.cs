@@ -186,7 +186,71 @@ namespace DbOperationWithCoreApp.Controllers
             return Ok(BookList);
         }
 
+
+        // Eager Loading in EF core
+
+        [HttpGet("AllWithEagerLoading")]
+        public async Task<IActionResult> GetBookswithAuthorEagerLoading()
+        {
+            var BookList = await appDbContext.Books
+                .Include(x => x.Author)
+               // .Include(x => x.Language)
+                .ToListAsync();
+            return Ok(BookList);
+        }
          
+
+
+
+        // Explicit Loading in EF core
+
+        [HttpGet("AllWithExplicitLoading")] 
+        public async Task<IActionResult> GetBookswithAuthorExplicitLoading()
+        {
+            var BookList = await appDbContext.Books.ToListAsync();
+
+            foreach (var book in BookList)
+            {
+                await appDbContext.Entry(book).Reference(x => x.Author).LoadAsync();
+               //  await appDbContext.Entry(book).Reference(x => x.Language).LoadAsync();
+            }
+           
+            return Ok(BookList);
+        }
+
+        [HttpGet("AllWithExplicitLoading2")]
+
+        public async Task<IActionResult> GetBookswithAuthorExplicitLoading2()
+        {
+          var LanguageList = await appDbContext.Language.ToListAsync();
+
+            foreach (var languages in LanguageList)
+
+            {
+                await appDbContext.Entry(languages).Collection(x => x.Books).LoadAsync();
+            }
+
+            return Ok(LanguageList);
+
+        }
+
+
+
+        // Lazy Loading in EF core
+
+        [HttpGet("AllWithLazyLoading")]
+        public async Task<IActionResult> GetBookswithAuthorLazyLoading()
+        {
+            var books = await appDbContext.Books.ToListAsync();
+
+            // Access navigation property -> triggers Lazy Loading (if proxies are enabled)
+            foreach (var book in books)
+            {
+                var author = book.Author; // Lazy load happens here
+            }
+
+            return Ok(books);
+        }
 
 
         // to add book with author details

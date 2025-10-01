@@ -8,7 +8,7 @@
         public int CurrencyId { get; set; }
 
 
-        public Book Book { get; set; }
-        public Currencies Currencies { get; set; }
+        public virtual Book Book { get; set; }
+        public virtual Currencies Currencies { get; set; }
     }
 }
